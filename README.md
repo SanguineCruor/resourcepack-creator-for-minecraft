@@ -1,6 +1,5 @@
-Minecraft Resource Pack Builder
+Minecraft Resource Pack Builder![License](https://img.shields.io/github/license/SanguineCruor/resourcepack-creator-for-minecraft)
 MIT Licensed – freely use, modify, and distribute.
-![License](https://img.shields.io/github/license/SanguineCruor/resourcepack-creator-for-minecraft)
 
 Lightweight Python CLI for creating, validating, and packaging Minecraft resource packs (1.6.1 – 1.21.11).
 No external dependencies, cross‑platform (Windows/macOS/Linux), bilingual prompts (en/ru).
