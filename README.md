@@ -1,6 +1,6 @@
 # Minecraft Resource Pack Builder
 
-![Uploading изображение.png…]()
+**English** | [Русский](README.ru.md)
 
 [![License](https://img.shields.io/github/license/SanguineCruor/resourcepack-creator-for-minecraft)](https://github.com/SanguineCruor/resourcepack-creator-for-minecraft/blob/main/LICENSE)
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/)
