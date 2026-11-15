@@ -1,122 +1,201 @@
-Minecraft Resource Pack Builder
-MIT Licensed – freely use, modify, and distribute. ![License](https://img.shields.io/github/license/SanguineCruor/resourcepack-creator-for-minecraft)
+# Minecraft Resource Pack Builder
 
-Lightweight Python CLI for creating, validating, and packaging Minecraft resource packs (1.6.1 – 1.21.11).
-No external dependencies, cross‑platform (Windows/macOS/Linux), bilingual prompts (en/ru).
+[![License](https://img.shields.io/github/license/SanguineCruor/resourcepack-creator-for-minecraft)](https://github.com/SanguineCruor/resourcepack-creator-for-minecraft/blob/main/LICENSE)
+[![Python](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/)
+[![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey)]()
+[![Minecraft](https://img.shields.io/badge/Minecraft-1.6.1%20--%201.21.11-green)]()
 
-Features
-✅ Generate starter folder with pack.mcmeta and pack.png
+Lightweight Python command-line utility for creating, validating, and packaging Minecraft resource packs. No external dependencies. Cross-platform. Bilingual interactive prompts (English/Russian).
 
-✅ Build ready‑to‑use .zip archives
+## Table of Contents
 
-✅ Validate folder structure and metadata
+- [Overview](#overview)
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Commands](#commands)
+  - [init](#init)
+  - [build](#build)
+  - [validate](#validate)
+  - [formats](#formats)
+  - [help](#help)
+- [pack.mcmeta Generation](#packmcmeta-generation)
+- [Supported Versions](#supported-versions)
+- [Folder Structure](#folder-structure)
+- [Troubleshooting](#troubleshooting)
+- [Exit Codes](#exit-codes)
+- [License](#license)
 
-✅ Interactive version selection (English/Russian)
+## Overview
 
-✅ Manual override for pack_format or min/max_format
+Minecraft Resource Pack Builder is a single-file Python script that automates routine operations with Minecraft resource packs:
 
-✅ Bilingual prompts (en/ru) based on system locale
+- Generation of a starter pack folder with `pack.mcmeta` and a placeholder `pack.png`.
+- Packaging of a pack folder into a ready-to-use `.zip` archive.
+- Validation of folder structure and `pack.mcmeta` metadata.
+- Interactive selection of the target Minecraft version with automatic `pack_format` resolution.
+- Manual override of `pack_format` or `min_format`/`max_format` values.
+- Bilingual prompts (English/Russian) selected based on the system locale.
 
-Installation
-Download resourcepack_builder.py and run with Python 3.10+:
+## Requirements
 
-bash
+| Requirement | Value |
+|---|---|
+| Python | 3.10 or newer |
+| External dependencies | None (standard library only) |
+| Operating systems | Windows, macOS, Linux |
+
+## Installation
+
+Download `resourcepack_builder.py` and run it with Python 3.10+:
+
+```bash
 python resourcepack_builder.py --help
-Commands (Quick Start)
-init – create a new pack
-bash
+```
+
+## Commands
+
+### init
+
+Creates a new resource pack folder with a starter structure.
+
+```bash
 python resourcepack_builder.py init my_pack
-Prompts for name, description, author, and Minecraft version (interactive table).
+```
+
+The command prompts for the pack name, description, author, and target Minecraft version (interactive table).
+
 Options:
 
---version "1.21.11" or --version 23 (by number)
+| Option | Description |
+|---|---|
+| `--version "<version>"` | Target Minecraft version, e.g. `"1.21.11"` or `"1.20 - 1.20.1"`; a numeric index from the version table is also accepted |
+| `--pack-format <N>` | Manual override of the `pack_format` value |
+| `--name <string>` | Pack name |
+| `--description <string>` | Pack description |
+| `--author <string>` | Pack author |
 
---pack-format 94 (manual override)
+### build
 
---name, --description, --author
+Packages a resource pack folder into a `.zip` archive.
 
-build – package into .zip
-bash
+```bash
 python resourcepack_builder.py build my_pack -o my_pack.zip
+```
+
 Options:
 
---icon icon.png
+| Option | Description |
+|---|---|
+| `-o, --output <path>` | Output ZIP file (default: `resourcepack.zip`) |
+| `--icon <path>` | Optional pack icon file, stored as `pack.png` |
+| `--name <string>` | Pack name when generating `pack.mcmeta` |
+| `--description <string>` | Pack description when generating `pack.mcmeta` |
+| `--author <string>` | Pack author |
+| `--version "<version>"` | Target Minecraft version |
+| `--pack-format <N>` | Manual override of the `pack_format` value |
 
---name, --description, --author
+If `pack.mcmeta` is missing in the source folder, it is generated automatically using the provided options and defaults.
 
---version "1.20.5" or --pack-format 55
+### validate
 
-validate – check structure
-bash
+Checks the resource pack folder structure and metadata.
+
+```bash
 python resourcepack_builder.py validate my_pack
-Checks folder, pack.mcmeta (valid JSON + format fields), and assets/minecraft subfolders.
+```
 
-formats – show version table
-bash
+Validation includes:
+
+- Presence of the pack folder.
+- Presence and JSON validity of `pack.mcmeta`.
+- Presence of `pack_format` or the `min_format`/`max_format` pair in the `pack` section.
+- Presence of the `assets/minecraft` folder structure.
+
+### formats
+
+Displays the full reference table of Minecraft versions and corresponding pack format numbers.
+
+```bash
 python resourcepack_builder.py formats
-Displays all pack_format numbers and ranges.
+```
 
-help – show this overview
-bash
+### help
+
+Displays the general command overview.
+
+```bash
 python resourcepack_builder.py help
-pack.mcmeta generation
-Automatically writes:
+```
 
-Old style: pack_format: N
+## pack.mcmeta Generation
 
-New style (1.21.9+): min_format / max_format
+The tool automatically writes `pack.mcmeta` using one of two styles:
 
-The interactive table picks the right format for you.
+| Style | Applicable versions | Fields |
+|---|---|---|
+| Legacy | 1.6.1 – 1.21.8 | `pack_format` |
+| Modern | 1.21.9 and newer | `min_format`, `max_format` |
 
-Supported versions (simplified)
-MC Version(s)	pack_format	Note
-1.6.1 – 1.8.9	1	
-1.9 – 1.10.2	2	
-1.11 – 1.12.2	3	
-1.13 – 1.14.4	4	
-1.15 – 1.16.1	5	
-1.16.2 – 1.16.5	6	
-1.17 – 1.17.1	7	
-1.18 – 1.18.2	8	
-1.19 – 1.19.2	9	
-1.19.3	10	
-1.19.4	12	
-1.20 – 1.20.1	15	
-1.20.2	18	
-1.20.3 – 1.20.4	26	
-1.20.5 – 1.20.6	32	
-1.21 – 1.21.1	34	
-1.21.2 – 1.21.3	42	
-1.21.4	46	
-1.21.5	55	
-1.21.6	63	
-1.21.7 – 1.21.8	64	
-1.21.9 – 1.21.10	88.0 *	min/max_format
-1.21.11	94.1 *	min/max_format
-Folder structure
-text
+The interactive version table selects the appropriate style and values automatically. Manual override is available via `--pack-format`.
+
+## Supported Versions
+
+| Minecraft version(s) | pack_format | Note |
+|---|---|---|
+| 1.6.1 – 1.8.9 | 1 | |
+| 1.9 – 1.10.2 | 2 | |
+| 1.11 – 1.12.2 | 3 | |
+| 1.13 – 1.14.4 | 4 | |
+| 1.15 – 1.16.1 | 5 | |
+| 1.16.2 – 1.16.5 | 6 | |
+| 1.17 – 1.17.1 | 7 | |
+| 1.18 – 1.18.2 | 8 | |
+| 1.19 – 1.19.2 | 9 | |
+| 1.19.3 | 10 | |
+| 1.19.4 | 12 | |
+| 1.20 – 1.20.1 | 15 | |
+| 1.20.2 | 18 | |
+| 1.20.3 – 1.20.4 | 26 | |
+| 1.20.5 – 1.20.6 | 32 | |
+| 1.21 – 1.21.1 | 34 | |
+| 1.21.2 – 1.21.3 | 42 | |
+| 1.21.4 | 46 | |
+| 1.21.5 | 55 | |
+| 1.21.6 | 63 | |
+| 1.21.7 – 1.21.8 | 64 | |
+| 1.21.9 – 1.21.10 | 88.0 | `min_format` / `max_format` |
+| 1.21.11 | 94.1 | `min_format` / `max_format` |
+
+## Folder Structure
+
+```
 my_pack/
-├── pack.mcmeta          (auto‑generated)
-├── pack.png             (custom icon 256×256)
+├── pack.mcmeta          (auto-generated)
+├── pack.png             (custom icon, 256x256)
 └── assets/minecraft/
-    ├── textures/block/     (your .png)
+    ├── textures/block/     (.png files)
     ├── textures/item/
-    ├── sounds/             (.ogg)
+    ├── sounds/             (.ogg files)
     ├── models/
     ├── font/
     └── lang/
-Troubleshooting (common)
-pack.mcmeta invalid → check JSON syntax and pack + author keys.
+```
 
-No assets/minecraft → create that folder inside your pack.
+## Troubleshooting
 
-Minecraft doesn't load pack → run validate, ensure correct pack_format.
+| Symptom | Resolution |
+|---|---|
+| `pack.mcmeta` is reported as invalid | Verify JSON syntax and the presence of the `pack` section with `pack_format` or `min_format`/`max_format` |
+| `No assets/minecraft folder structure found` | Create the `assets/minecraft` folder inside the pack |
+| Minecraft does not load the pack | Run `validate` and confirm the `pack_format` matches the target game version |
 
-Exit codes: 0 = success, 1 = error (see message).
+## Exit Codes
 
-Requirements & License
-Python 3.10+ (standard library only)
+| Code | Meaning |
+|---|---|
+| 0 | Success |
+| 1 | Error (see the message printed to stderr) |
 
-MIT License – see LICENSE file.
+## License
 
-Happy pack building!
+Distributed under the MIT License.
